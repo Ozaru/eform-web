@@ -1,0 +1,213 @@
+<div
+  class="row"
+  *ngIf="
+    !permissoes ||
+    !recibosTabela ||
+    !usuariosFiltroReciboTabela ||
+    !fornecedoresFiltroReciboTabela ||
+    !statusFiltroReciboTabela
+  "
+>
+  <div class="col text-center">
+    <div class="spinner-border" style="width: 5rem; height: 5rem" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <h6>Loading...</h6>
+  </div>
+</div>
+<div
+  *ngIf="
+    !!permissoes &&
+    !!recibosTabela &&
+    !!usuariosFiltroReciboTabela &&
+    !!fornecedoresFiltroReciboTabela &&
+    !!statusFiltroReciboTabela
+  "
+>
+  <div class="card mb-3">
+    <div class="card-body">
+      <div class="row mb-3">
+        <div class="col-2">
+          <label for="id" class="form-label">ID</label>
+          <input
+            type="number"
+            class="form-control form-control-lg"
+            id="id"
+            [(ngModel)]="filtroReciboTabela.id"
+          />
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col">
+          <label for="dataInicial" class="form-label">Data inicial</label>
+          <input
+            type="date"
+            class="form-control form-control-lg"
+            id="dataInicial"
+            [(ngModel)]="filtroReciboTabela.dataInicial"
+          />
+        </div>
+        <div class="col">
+          <label for="dataFinal" class="form-label">Data final</label>
+          <input
+            type="date"
+            class="form-control form-control-lg"
+            id="dataFinal"
+            [(ngModel)]="filtroReciboTabela.dataFinal"
+          />
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-12">
+          <label for="usuario" class="form-label">Usuário</label>
+          <select class="form-select form-select-lg" id="usuario" [(ngModel)]="filtroReciboTabela.usuarioId">
+            <option></option>
+            <option
+              [value]="usuarioFiltroReciboTabela.id"
+              *ngFor="
+                let usuarioFiltroReciboTabela of usuariosFiltroReciboTabela
+              "
+            >
+              {{ usuarioFiltroReciboTabela.nome }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-12">
+          <label for="fornecedor" class="form-label">Fornecedor</label>
+          <select class="form-select form-select-lg" id="fornecedor"  [(ngModel)]="filtroReciboTabela.fornecedorId">
+            <option></option>
+            <option
+              [value]="fornecedorFiltroReciboTabela.id"
+              *ngFor="
+                let fornecedorFiltroReciboTabela of fornecedoresFiltroReciboTabela
+              "
+            >
+              {{ fornecedorFiltroReciboTabela.nome }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col">
+          <label for="valorInicial" class="form-label">Valor inicial</label>
+          <input
+            type="number"
+            class="form-control form-control-lg"
+            id="valorInicial"
+            [(ngModel)]="filtroReciboTabela.valorInicial"
+          />
+        </div>
+        <div class="col">
+          <label for="valorFinal" class="form-label">Valor final</label>
+          <input
+            type="number"
+            class="form-control form-control-lg"
+            id="valorFinal"
+            [(ngModel)]="filtroReciboTabela.valorFinal"
+          />
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-12">
+          <label for="status" class="form-label">Status</label>
+          <select class="form-select form-select-lg" id="status" [(ngModel)]="filtroReciboTabela.status">
+            <option></option>
+            <option
+              [value]="status.nome"
+              *ngFor="let status of statusFiltroReciboTabela"
+            >
+              {{ status.texto }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-12 d-flex">
+          <button
+            class="btn btn-outline-secondary btn-lg ms-auto"
+            (click)="atualizar()"
+          >
+            <img src="assets/buscar.png" alt="" width="24" height="24" />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-12 table-responsive">
+      <table class="table table-hover caption-top">
+        <caption>
+          Lista de modelos - Total de registros:
+          {{
+            recibosTabela.totalElements
+          }}
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Data</th>
+            <th scope="col">Usuário</th>
+            <th scope="col">Fornecedor</th>
+            <th scope="col">Valor</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            style="cursor: pointer"
+            *ngFor="let reciboTabela of recibosTabela.content"
+            (click)="abrirRegistro(reciboTabela.id)"
+          >
+            <td>{{ reciboTabela.id }}</td>
+            <td>{{ reciboTabela.data | date: "dd/MM/yyyy HH:mm:ss" }}</td>
+            <td>{{ reciboTabela.usuarioNome }}</td>
+            <td>{{ reciboTabela.fornecedorNome }}</td>
+            <td>{{ reciboTabela.valor }}</td>
+            <td>{{ reciboTabela.status }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 d-flex justify-content-center">
+      <nav>
+        <ul class="pagination">
+          <li
+            class="page-item"
+            [class]="recibosTabela.number < 1 ? 'disabled' : ''"
+          >
+            <button
+              class="page-link"
+              (click)="mudarPagina(recibosTabela.number - 1)"
+            >
+              <img src="assets/voltar.png" alt="" width="24" height="24" />
+            </button>
+          </li>
+          <li class="page-item active">
+            <button class="page-link" disabled>
+              {{ recibosTabela.number + 1 }}
+            </button>
+          </li>
+          <li
+            class="page-item"
+            [class]="
+              recibosTabela.number >= recibosTabela.totalPages - 1
+                ? 'disabled'
+                : ''
+            "
+          >
+            <button
+              class="page-link"
+              (click)="mudarPagina(recibosTabela.number + 1)"
+            >
+              <img src="assets/avancar.png" alt="" width="24" height="24" />
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>

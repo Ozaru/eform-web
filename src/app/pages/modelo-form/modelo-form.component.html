@@ -1,0 +1,60 @@
+<div class="row" *ngIf="!modeloForm || !permissoes">
+  <div class="col text-center">
+    <div class="spinner-border" style="width: 5rem; height: 5rem" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <h6>Loading...</h6>
+  </div>
+</div>
+<div *ngIf="!!modeloForm && !!permissoes">
+  <div class="card mb-3">
+    <div class="card-body">
+      <div class="row mb-3">
+        <div class="col-12">
+          <div class="form-check form-check-lg">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="ativo"
+              [(ngModel)]="modeloForm.ativo"
+              [disabled]="!hasClaim('modelo_form-salvar')"
+            />
+            <label class="form-check-label" for="ativo">Ativo</label>
+          </div>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-2">
+          <label for="id" class="form-label">ID</label>
+          <input
+            type="number"
+            class="form-control form-control-lg"
+            id="id"
+            [(ngModel)]="modeloForm.id"
+            disabled
+          />
+        </div>
+        <div class="col-10">
+          <label for="nome" class="form-label">Nome</label>
+          <input
+            type="text"
+            class="form-control form-control-lg"
+            id="nome"
+            [(ngModel)]="modeloForm.nome"
+            [disabled]="!hasClaim('modelo_form-salvar')"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mb-3">
+    <div class="col-12 d-flex">
+      <button class="btn btn-outline-secondary btn-lg" (click)="cancelar()">
+        <img src="assets/cancelar.png" alt="" width="24" height="24" />
+      </button>
+      <button class="btn btn-outline-secondary btn-lg ms-auto" (click)="salvar()" *ngIf="hasClaim('modelo_form-salvar')">
+        <img src="assets/salvar.png" alt="" width="24" height="24" />
+      </button>
+    </div>
+  </div>
+</div>

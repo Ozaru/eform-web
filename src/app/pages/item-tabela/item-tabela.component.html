@@ -1,0 +1,124 @@
+<div class="row" *ngIf="!this.permissoes || !itensTabela">
+  <div class="col text-center">
+    <div class="spinner-border" style="width: 5rem; height: 5rem" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <h6>Loading...</h6>
+  </div>
+</div>
+<div *ngIf="!!this.permissoes && !!itensTabela">
+  <div class="card mb-3">
+    <div class="card-body">
+      <div class="row mb-3">
+        <div class="col-12">
+          <div class="form-check form-check-inline form-check-lg">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="inativo"
+              [(ngModel)]="filtroItemTabela.inativo"
+            />
+            <label class="form-check-label" for="inativo"
+              >Mostrar inativos</label
+            >
+          </div>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-12">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control form-control-lg"
+              placeholder="Pesquisar por nome"
+              [(ngModel)]="filtroItemTabela.nomeContem"
+            />
+            <button
+              class="btn btn-outline-secondary btn-lg"
+              (click)="atualizar()"
+            >
+              <img src="assets/buscar.png" alt="" width="24" height="24" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col d-flex">
+      <button
+        class="btn btn-outline-secondary btn-lg ms-auto"
+        (click)="inserir()"
+        *ngIf="hasClaim('item_form-salvar')"
+      >
+        <img src="assets/add.png" alt="" width="24" height="24" />
+      </button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 table-responsive">
+      <table class="table table-hover caption-top">
+        <caption>
+          Lista de itens - Total de registros:
+          {{
+            itensTabela.totalElements
+          }}
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Nome</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            [class]="!itemTabela.ativo ? 'text-danger' : ''"
+            style="cursor: pointer"
+            *ngFor="let itemTabela of itensTabela.content"
+            (click)="abrirRegistro(itemTabela.id)"
+          >
+            <td>{{ itemTabela.id }}</td>
+            <td>{{ itemTabela.nome }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 d-flex justify-content-center">
+      <nav>
+        <ul class="pagination">
+          <li
+            class="page-item"
+            [class]="itensTabela.number < 1 ? 'disabled' : ''"
+          >
+            <button
+              class="page-link"
+              (click)="mudarPagina(itensTabela.number - 1)"
+            >
+            <img src="assets/voltar.png" alt="" width="24" height="24" />
+            </button>
+          </li>
+          <li class="page-item active">
+            <button class="page-link" disabled>
+              {{ itensTabela.number + 1 }}
+            </button>
+          </li>
+          <li
+            class="page-item"
+            [class]="
+              itensTabela.number >= itensTabela.totalPages - 1 ? 'disabled' : ''
+            "
+          >
+            <button
+              class="page-link"
+              (click)="mudarPagina(itensTabela.number + 1)"
+            >
+            <img src="assets/avancar.png" alt="" width="24" height="24" />
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,124 @@
+<div class="row" *ngIf="!this.permissoes || !modelosTabela">
+  <div class="col text-center">
+    <div class="spinner-border" style="width: 5rem; height: 5rem" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <h6>Loading...</h6>
+  </div>
+</div>
+<div *ngIf="!!this.permissoes && !!modelosTabela">
+  <div class="card mb-3">
+    <div class="card-body">
+      <div class="row mb-3">
+        <div class="col-12">
+          <div class="form-check form-check-inline form-check-lg">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="inativo"
+              [(ngModel)]="filtroModeloTabela.inativo"
+            />
+            <label class="form-check-label" for="inativo"
+              >Mostrar inativos</label
+            >
+          </div>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-12">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control form-control-lg"
+              placeholder="Pesquisar por nome"
+              [(ngModel)]="filtroModeloTabela.nomeContem"
+            />
+            <button
+              class="btn btn-outline-secondary btn-lg"
+              (click)="atualizar()"
+            >
+              <img src="assets/buscar.png" alt="" width="24" height="24" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col d-flex">
+      <button
+        class="btn btn-outline-secondary btn-lg ms-auto"
+        (click)="inserir()"
+        *ngIf="hasClaim('modelo_form-salvar')"
+      >
+        <img src="assets/add.png" alt="" width="24" height="24" />
+      </button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 table-responsive">
+      <table class="table table-hover caption-top">
+        <caption>
+          Lista de modelos - Total de registros:
+          {{
+            modelosTabela.totalElements
+          }}
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Nome</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            [class]="!modeloTabela.ativo ? 'text-danger' : ''"
+            style="cursor: pointer"
+            *ngFor="let modeloTabela of modelosTabela.content"
+            (click)="abrirRegistro(modeloTabela.id)"
+          >
+            <td>{{ modeloTabela.id }}</td>
+            <td>{{ modeloTabela.nome }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 d-flex justify-content-center">
+      <nav>
+        <ul class="pagination">
+          <li
+            class="page-item"
+            [class]="modelosTabela.number < 1 ? 'disabled' : ''"
+          >
+            <button
+              class="page-link"
+              (click)="mudarPagina(modelosTabela.number - 1)"
+            >
+            <img src="assets/voltar.png" alt="" width="24" height="24" />
+            </button>
+          </li>
+          <li class="page-item active">
+            <button class="page-link" disabled>
+              {{ modelosTabela.number + 1 }}
+            </button>
+          </li>
+          <li
+            class="page-item"
+            [class]="
+              modelosTabela.number >= modelosTabela.totalPages - 1 ? 'disabled' : ''
+            "
+          >
+            <button
+              class="page-link"
+              (click)="mudarPagina(modelosTabela.number + 1)"
+            >
+            <img src="assets/avancar.png" alt="" width="24" height="24" />
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
